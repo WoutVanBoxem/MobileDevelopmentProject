@@ -1,5 +1,6 @@
 package com.example.mobiledevelopmentproject
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobiledevelopmentproject.Club
 import com.example.mobiledevelopmentproject.R
+
 class ClubAdapter(private val clubs: List<Club>) : RecyclerView.Adapter<ClubAdapter.ClubViewHolder>() {
 
     class ClubViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -23,6 +25,14 @@ class ClubAdapter(private val clubs: List<Club>) : RecyclerView.Adapter<ClubAdap
         val club = clubs[position]
         holder.tvClubName.text = club.naam
         holder.tvClubAddress.text = "${club.straat} ${club.huisnummer}, ${club.gemeente}"
+        holder.itemView.setOnClickListener {
+            // Context van het itemView gebruiken
+            val context = holder.itemView.context
+            val intent = Intent(context, FieldSelectionActivity::class.java).apply {
+                putExtra("CLUB_ID", club.id)
+            }
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount() = clubs.size
