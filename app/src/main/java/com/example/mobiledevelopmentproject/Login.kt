@@ -21,7 +21,14 @@ class Login : AppCompatActivity() {
         val emailEditText = findViewById<TextInputEditText>(R.id.email)
         val passwordEditText = findViewById<TextInputEditText>(R.id.password)
         val loginButton = findViewById<Button>(R.id.btn_login)
+        val signupbutton = findViewById<Button>(R.id.btn_signup)
 
+        signupbutton.setOnClickListener{
+
+            val intent = Intent(this, Register::class.java)
+            startActivity(intent)
+            finish()
+        }
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
@@ -32,6 +39,7 @@ class Login : AppCompatActivity() {
                 Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
             }
         }
+
     }
 
     private fun loginUser(email: String, password: String) {
@@ -39,7 +47,7 @@ class Login : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Navigeer naar MainActivity
-                    val intent = Intent(this, HomeActivity::class.java)
+                    val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {

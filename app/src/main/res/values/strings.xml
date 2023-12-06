@@ -49,4 +49,19 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>
+    <string name="click_to_register" />
+    <string name="click_to_login" />
+    <string name="register">Register</string>
+    <string name="signup"> Sign up </string>
+    <string name="GoBack" />
+    <string name="goback"> Go Back </string>
+    <string name="adress"> Adress </string>
+    <string name="gender">Gender</string>
+    <string name="firstname">Firstname\n</string>
+    <string name="lastname">Lastname\n</string>
+    <string name="city">City\n</string>
+    <string-array name="gender_options">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
 </resources>
