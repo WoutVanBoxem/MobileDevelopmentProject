@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 // In je Home Activity
 class HomeActivity : AppCompatActivity() {
@@ -16,6 +17,18 @@ class HomeActivity : AppCompatActivity() {
         reserveerVeldjeButton.setOnClickListener {
             val intent = Intent(this, ClubsActivity::class.java)
             startActivity(intent)
+        }
+
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.navigation)
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_profile -> {
+                    // Handle profile navigation
+                    startActivity(Intent(this, Profile::class.java))
+                    return@setOnNavigationItemSelectedListener true
+                }
+                else -> return@setOnNavigationItemSelectedListener false
+            }
         }
     }
 }
