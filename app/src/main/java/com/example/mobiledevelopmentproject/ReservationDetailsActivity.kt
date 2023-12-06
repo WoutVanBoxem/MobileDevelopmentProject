@@ -26,11 +26,6 @@ class ReservationDetailsActivity : AppCompatActivity() {
         val timeslotId = intent.getStringExtra("TIMESLOTID")
         val clubName = intent.getStringExtra("CLUB_NAME")
         val clubAddress = intent.getStringExtra("CLUB_ADDRESS")
-        Log.d("ReservationDetailsActivity", "field: ${field.naam}")
-        Log.d("ReservationDetailsActivity", "date: $date")
-        Log.d("ReservationDetailsActivity", "timeSlot: $timeSlot")
-        Log.d("ReservationDetailsActivity", "clubName: $clubName")
-        Log.d("ReservationDetailsActivity", "clubAddress: $clubAddress")
         clubId = intent.getStringExtra("CLUB_ID") ?: return
 
 
@@ -42,10 +37,10 @@ class ReservationDetailsActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.dateTextView).text = formattedDate
         findViewById<TextView>(R.id.timeSlotTextView).text = timeSlot
 
-        // Toggle voor publieke wedstrijd
+
         val publicMatchToggle = findViewById<Switch>(R.id.publicMatchSwitch)
 
-        // Voeg een click listener toe aan de bevestigingsknop
+
         findViewById<Button>(R.id.confirmButton).setOnClickListener {
             saveReservation(field, date, timeslotId, publicMatchToggle.isChecked)
         }
@@ -57,7 +52,7 @@ class ReservationDetailsActivity : AppCompatActivity() {
         val participants = if (currentUserEmail != null) {
             listOf(currentUserEmail)
         } else {
-            listOf<String>() // Lege lijst als de gebruiker niet is ingelogd
+            listOf<String>()
         }
 
         val reservation = hashMapOf(
@@ -75,7 +70,7 @@ class ReservationDetailsActivity : AppCompatActivity() {
                 navigateToHome()
             }
             .addOnFailureListener {
-                // Behandel de fout
+
             }
     }
     private fun formatDateToEuropean(dateString: String?): String {
@@ -86,15 +81,15 @@ class ReservationDetailsActivity : AppCompatActivity() {
             outputFormat.format(date)
         } catch (e: Exception) {
             Log.e("ReservationDetailsActivity", "Error formatting date", e)
-            dateString ?: "" // Retourneer de originele string of een lege string als deze null is
+            dateString ?: ""
         }
     }
     private fun navigateToHome() {
         val intent = Intent(this, HomeActivity::class.java)
-        // Als je wilt voorkomen dat gebruikers terugkeren naar deze activity met de back-knop:
+
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
-        finish() // Sluit deze activity af om te voorkomen dat de gebruiker hier terugkeert met de back-knop
+        finish()
     }
 
 }

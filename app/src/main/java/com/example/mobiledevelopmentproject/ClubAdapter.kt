@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobiledevelopmentproject.Club
-import com.example.mobiledevelopmentproject.R
 
 class ClubAdapter(private val clubs: List<Club>) : RecyclerView.Adapter<ClubAdapter.ClubViewHolder>() {
 
@@ -30,7 +28,7 @@ class ClubAdapter(private val clubs: List<Club>) : RecyclerView.Adapter<ClubAdap
             val intent = Intent(context, FieldSelectionActivity::class.java).apply {
                 putExtra("CLUB_ID", club.id)
                 putExtra("CLUB_NAME", club.naam)
-                putExtra("CLUB_ADDRESS", club.straat + " " + club.huisnummer + " " + club.gemeente) // Voeg deze toe
+                putExtra("CLUB_ADDRESS", club.straat + " " + club.huisnummer + " " + club.gemeente)
             }
             context.startActivity(intent)
         }

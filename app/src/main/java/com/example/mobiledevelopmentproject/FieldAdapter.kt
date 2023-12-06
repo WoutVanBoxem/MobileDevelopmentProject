@@ -10,7 +10,7 @@ class FieldAdapter(private val fields: List<Field>, private val onClick: (Field)
 
     class FieldViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvFieldName: TextView = view.findViewById(R.id.tvFieldName)
-        val tvFieldType: TextView = view.findViewById(R.id.tvFieldType) // Voeg dit toe in je field_item.xml
+        val tvFieldType: TextView = view.findViewById(R.id.tvFieldType)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FieldViewHolder {

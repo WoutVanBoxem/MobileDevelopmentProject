@@ -2,7 +2,6 @@ package com.example.mobiledevelopmentproject
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -11,10 +10,8 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FirebaseFirestore
 import java.io.Serializable
-import com.example.mobiledevelopmentproject.Field
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -77,7 +74,7 @@ class FieldSelectionActivity : AppCompatActivity() {
             }
 
             if (hour >= 24) {
-                hour -= 24 // Terug naar 0 uur
+                hour -= 24
             }
 
             val end = String.format("%02d:%02d", hour, minute)
@@ -124,18 +121,12 @@ class FieldSelectionActivity : AppCompatActivity() {
                     .whereEqualTo("tijdslotId", timeSlotId.toString())
                     .get()
                     .addOnSuccessListener { reservations ->
-                        val reservedFieldNames = reservations.mapNotNull { it.getString("veldNaam") } // Aangepast naar het gebruik van veldnaam
+                        val reservedFieldNames = reservations.mapNotNull { it.getString("veldNaam") }
                         val availableFields = allFields.filterNot { field -> reservedFieldNames.contains(field.naam) }
 
                         // Update de RecyclerView met de beschikbare veldjes
                         val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewAvailableFields)
                         recyclerView.adapter = FieldAdapter(availableFields) { selectedField ->
-                            Log.d("FieldSelectionActivity", "Selected field: ${selectedField.naam}")
-                            Log.d("FieldSelectionActivity", "Date: $formattedDate")
-                            Log.d("FieldSelectionActivity", "TimeSlot: ${timeSlots[timeSlotId]}")
-                            Log.d("FieldSelectionActivity", "Club Name: $clubName")
-                            Log.d("FieldSelectionActivity", "Club Address: $clubAddress")
-                            Log.d("FieldSelectionActivity", "TimeSlotID : ${timeSlotId}")
 
                             val intent = Intent(this, ReservationDetailsActivity::class.java)
                             intent.putExtra("FIELD", selectedField as Serializable)
@@ -151,7 +142,7 @@ class FieldSelectionActivity : AppCompatActivity() {
                     }
             }
             .addOnFailureListener { exception ->
-                // Log of toon fout
+
             }
     }
 
