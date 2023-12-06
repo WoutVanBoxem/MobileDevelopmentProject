@@ -37,7 +37,7 @@ class ClubsActivity : AppCompatActivity() {
                 recyclerView.adapter = adapter
             }
             .addOnFailureListener { exception ->
-                // Log de fout of toon een bericht aan de gebruiker
+
             }
     }
 

@@ -26,10 +26,11 @@ class ClubAdapter(private val clubs: List<Club>) : RecyclerView.Adapter<ClubAdap
         holder.tvClubName.text = club.naam
         holder.tvClubAddress.text = "${club.straat} ${club.huisnummer}, ${club.gemeente}"
         holder.itemView.setOnClickListener {
-            // Context van het itemView gebruiken
             val context = holder.itemView.context
             val intent = Intent(context, FieldSelectionActivity::class.java).apply {
                 putExtra("CLUB_ID", club.id)
+                putExtra("CLUB_NAME", club.naam)
+                putExtra("CLUB_ADDRESS", club.straat + " " + club.huisnummer + " " + club.gemeente) // Voeg deze toe
             }
             context.startActivity(intent)
         }

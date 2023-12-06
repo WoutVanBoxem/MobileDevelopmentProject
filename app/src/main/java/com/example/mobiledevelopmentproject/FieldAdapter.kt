@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class FieldAdapter(private val fields: List<Field>) : RecyclerView.Adapter<FieldAdapter.FieldViewHolder>() {
+class FieldAdapter(private val fields: List<Field>, private val onClick: (Field) -> Unit) : RecyclerView.Adapter<FieldAdapter.FieldViewHolder>() {
 
     class FieldViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvFieldName: TextView = view.findViewById(R.id.tvFieldName)
@@ -22,9 +22,7 @@ class FieldAdapter(private val fields: List<Field>) : RecyclerView.Adapter<Field
         val field = fields[position]
         holder.tvFieldName.text = field.naam
         holder.tvFieldType.text = field.type
-        holder.itemView.setOnClickListener {
-            itemClickListener(field)
-        }
+        holder.itemView.setOnClickListener { onClick(field) }
     }
 
     override fun getItemCount() = fields.size

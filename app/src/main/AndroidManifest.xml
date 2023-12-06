@@ -39,6 +39,7 @@
             android:name=".HomeActivity"
             android:exported="true" />
         <activity android:name=".FieldSelectionActivity" />
+        <activity android:name=".ReservationDetailsActivity" />
 
 
     </application>
