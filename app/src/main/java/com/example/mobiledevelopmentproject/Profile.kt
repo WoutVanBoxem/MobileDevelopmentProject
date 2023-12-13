@@ -51,14 +51,10 @@ class Profile : AppCompatActivity() {
                         findViewById<TextView>(R.id.firstNameTextView).text = user?.firstname
                         findViewById<TextView>(R.id.lastNameTextView).text = user?.lastname
                         findViewById<TextView>(R.id.cityTextView).text = user?.city
-                        // Assume user?.gender is a String representing the selected gender
+
                         val genderSpinner = findViewById<Spinner>(R.id.spinner_gender)
                         val genderArray = resources.getStringArray(R.array.gender_options)
-
-// Find the index of the user's gender in the array
                         val selectedGenderIndex = genderArray.indexOf(user?.gender)
-
-// Set the selected item in the Spinner
                         if (selectedGenderIndex != -1) {
                             genderSpinner.setSelection(selectedGenderIndex)
                         } else {
@@ -66,14 +62,41 @@ class Profile : AppCompatActivity() {
                             Log.e(TAG, "User gender not found in gender options array")
                         }
 
+                        val bestHandSpinner = findViewById<Spinner>(R.id.spinner_bestHand)
+                        val bestHandArray = resources.getStringArray(R.array.best_hand)
+                        val selectedBestHandIndex = bestHandArray.indexOf(user?.bestHand)
+                        if (selectedBestHandIndex != -1) {
+                            bestHandSpinner.setSelection(selectedBestHandIndex)
+                        } else {
+                            // Handle the case where the user's gender is not found in the array
+                            Log.e(TAG, "User best hand not found in best hand options array")
+                        }
+
+                        val bestCourtPositionSpinner = findViewById<Spinner>(R.id.spinner_courtPosition)
+                        val bestCourtPositionArray = resources.getStringArray(R.array.court_position)
+                        val selectedCourtPositionIndex = bestCourtPositionArray.indexOf(user?.bestPosition)
+                        if (selectedCourtPositionIndex != -1) {
+                            bestCourtPositionSpinner.setSelection(selectedCourtPositionIndex)
+                        } else {
+                            // Handle the case where the user's gender is not found in the array
+                            Log.e(TAG, "User best hand not found in best hand options array")
+                        }
+
+                        val bestTimeSpinner = findViewById<Spinner>(R.id.spinner_bestTime)
+                        val bestTimeArray = resources.getStringArray(R.array.best_time)
+                        val selectedTimeIndex = bestTimeArray.indexOf(user?.bestTime)
+                        if (selectedTimeIndex != -1) {
+                            bestTimeSpinner.setSelection(selectedTimeIndex)
+                        } else {
+                            // Handle the case where the user's gender is not found in the array
+                            Log.e(TAG, "User best hand not found in best hand options array")
+                        }
                         // Do something with the user object
                     } else {
-                        // Document with the specified email not found
                     }
                 }
                 .addOnFailureListener { exception ->
-                    // Handle errors
-                    //Log.d(TAG, "Error getting documents: ", exception)
+
                 }
         }
 
@@ -83,6 +106,9 @@ class Profile : AppCompatActivity() {
         val editLastName = findViewById<TextView>(R.id.lastNameTextView)
         val editCityName = findViewById<TextView>(R.id.cityTextView)
         val editGender = findViewById<Spinner>(R.id.spinner_gender)
+        val editBestHand = findViewById<Spinner>(R.id.spinner_bestHand)
+        val editBestCourtPosition = findViewById<Spinner>(R.id.spinner_courtPosition)
+        val editBestTime = findViewById<Spinner>(R.id.spinner_bestTime)
         enableEditTextButton.setOnClickListener {
             // Enable the EditText elements
 
@@ -103,7 +129,10 @@ class Profile : AppCompatActivity() {
                     "firstname" to editFirstName.text.toString(),
                     "city" to editCityName.text.toString(),
                     "lastname" to editLastName.text.toString(),
-                    "gender" to editGender.selectedItem.toString()
+                    "gender" to editGender.selectedItem.toString(),
+                    "bestHand" to editBestHand.selectedItem.toString(),
+                    "bestPosition" to editBestCourtPosition.selectedItem.toString(),
+                    "bestTime" to editBestTime.selectedItem.toString()
 
                     // Add other fields as needed
                 )

@@ -7,4 +7,8 @@ class UserClass {
     var lastname: String = ""
     var city: String = ""
     var gender: String = ""
+
+    var bestPosition : String =""
+    var bestHand : String =""
+    var bestTime : String =""
 }
