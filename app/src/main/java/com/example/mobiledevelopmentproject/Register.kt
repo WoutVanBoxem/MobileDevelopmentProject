@@ -94,7 +94,10 @@ class Register : AppCompatActivity() {
             "gender" to gender,
             "firstname" to firstname,
             "lastname" to lastname,
-            "city" to city
+            "city" to city,
+            "bestPosition" to "Links",
+            "bestHand" to "Links",
+            "bestTime" to "Ochtend"
             // Add more fields as needed
         )
 

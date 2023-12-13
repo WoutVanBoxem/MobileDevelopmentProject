@@ -119,6 +119,8 @@ class Profile : AppCompatActivity() {
                                 .addOnSuccessListener {
                                     // Document successfully updated
                                     Log.d(TAG, "DocumentSnapshot successfully updated!")
+                                    finish();
+                                    startActivity(getIntent());
                                 }
                                 .addOnFailureListener { e ->
                                     // Handle errors

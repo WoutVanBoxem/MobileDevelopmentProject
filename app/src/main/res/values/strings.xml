@@ -64,4 +64,19 @@
         <item>Male</item>
         <item>Female</item>
     </string-array>
+    <string-array name="court_position">
+        <item>Links</item>
+        <item>Beide</item>
+        <item>Rechts</item>
+    </string-array>
+    <string-array name="best_Hand">
+        <item>Links</item>
+        <item>Rechts</item>
+    </string-array>
+    <string-array name="best_time">
+        <item>Ochtend</item>
+        <item>Middag</item>
+        <item>Avond</item>
+        <item>Nacht</item>
+    </string-array>
 </resources>

@@ -98,14 +98,7 @@
             android:enabled="false"
             />
 
-        <Spinner
-            android:id="@+id/spinner_gender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:entries="@array/gender_options"
-            android:layout_below="@+id/lastNameTextView"
-            />
+
 
         <TextView
             android:id="@+id/labelCity"
@@ -141,7 +134,14 @@
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
-
+        <Spinner
+            android:id="@+id/spinner_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:entries="@array/gender_options"
+            android:layout_below="@+id/labelGender"
+            />
 
 
         <Button
