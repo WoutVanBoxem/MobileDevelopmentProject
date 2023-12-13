@@ -16,6 +16,14 @@ class HomeActivity : AppCompatActivity() {
         val reserveerVeldjeButton: Button = findViewById(R.id.btnReserveCourt)
         reserveerVeldjeButton.setOnClickListener {
             val intent = Intent(this, ClubsActivity::class.java)
+            intent.putExtra("action","reserveField")
+            startActivity(intent)
+        }
+
+        val btnFindMatch = findViewById<Button>(R.id.btnFindMatch)
+        btnFindMatch.setOnClickListener{
+            val intent = Intent(this, ClubsActivity::class.java)
+            intent.putExtra("action","findMatch")
             startActivity(intent)
         }
 

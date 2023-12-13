@@ -17,6 +17,16 @@
             android:layout_marginTop="300dp"
             android:background="@color/design_default_color_primary"/>
 
+        <Button
+            android:id="@+id/btnFindMatch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Zoek een wedstrijd"
+            android:layout_below="@id/btnReserveCourt"
+            android:layout_marginTop="16dp"
+            android:background="@color/design_default_color_primary"/>
+
+
         <!-- Overige UI-elementen kunnen hier worden toegevoegd -->
 
     </RelativeLayout>

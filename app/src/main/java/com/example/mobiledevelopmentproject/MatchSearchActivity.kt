@@ -6,37 +6,39 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ClubsActivity : AppCompatActivity() {
+class MatchSearchActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: ClubAdapter
+    private lateinit var adapter: MatchAdapter // Pas dit aan met je MatchAdapter
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.select_club)
+        setContentView(R.layout.activity_match_search)
 
-        val action = intent.getStringExtra("action") ?: "reserveField" // Standaardwaarde
+        val clubId = intent.getStringExtra("CLUB_ID") ?: return
 
-        recyclerView = findViewById(R.id.rvClubs)
+        recyclerView = findViewById(R.id.rvMatches)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        fetchClubs(action)
+        fetchMatches(clubId)
     }
 
-    private fun fetchClubs(action: String) {
-        db.collection("clubs")
+    private fun fetchMatches(clubId: String) {
+        db.collection("clubs").document(clubId).collection("reservaties")
+            .whereEqualTo("isPubliek", true)
             .get()
             .addOnSuccessListener { documents ->
-                val clubsList = ArrayList<Club>()
+                val matchesList = ArrayList<Match>()
                 for (document in documents) {
-                    val club = document.toObject(Club::class.java).copy(id = document.id)
-                    clubsList.add(club)
+                    val match = document.toObject(Match::class.java)
+                    matchesList.add(match)
                 }
-                adapter = ClubAdapter(clubsList, action)
+                adapter = MatchAdapter(matchesList)
                 recyclerView.adapter = adapter
             }
             .addOnFailureListener { exception ->
             }
     }
+
 }
