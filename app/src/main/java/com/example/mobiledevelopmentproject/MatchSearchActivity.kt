@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
@@ -16,17 +17,21 @@ import java.util.Locale
 class MatchSearchActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: MatchAdapter // Pas dit aan met je MatchAdapter
+    private lateinit var adapter: MatchAdapter
     private val db = FirebaseFirestore.getInstance()
+    private lateinit var clubName: String
+    private lateinit var clubAddress: String
+    private lateinit var clubId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match_search)
 
-        val clubId = intent.getStringExtra("CLUB_ID") ?: return
-        val clubName = intent.getStringExtra("CLUB_NAME")
+        clubId = intent.getStringExtra("CLUB_ID") ?: return
+        clubName = intent.getStringExtra("CLUB_NAME") ?: "Onbekende Club"
+        clubAddress = intent.getStringExtra("CLUB_ADDRESS") ?: "Onbekend Adres"
         val tvClubName = findViewById<TextView>(R.id.tvClubName)
-        tvClubName.text = clubName ?: "Club Naam"
+        tvClubName.text = clubName
 
         recyclerView = findViewById(R.id.rvMatches)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -68,6 +73,9 @@ class MatchSearchActivity : AppCompatActivity() {
     private fun fetchMatches(clubId: String) {
         val today = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val formattedTodayDate = dateFormat.format(today.time)
+        val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
+        val currentTimeslotId = TimeSlotUtil.getCurrentTimeSlotId()
 
         db.collection("clubs").document(clubId).collection("reservaties")
             .whereEqualTo("isPubliek", true)
@@ -75,11 +83,22 @@ class MatchSearchActivity : AppCompatActivity() {
             .addOnSuccessListener { documents ->
                 val matchesList = ArrayList<Match>()
                 for (document in documents) {
-                    val match = document.toObject(Match::class.java)
-                    val matchDate = dateFormat.parse(match.datum)
+                    val match = document.toObject(Match::class.java).apply {
+                        id = document.id // Stel het document ID in
+                    }
 
-                    if (matchDate != null && !matchDate.before(today.time)) {
-                        matchesList.add(match)
+                    if (match.datum >= formattedTodayDate &&
+                        match.deelnemers.size < 4 &&
+                        (currentUserEmail !in match.deelnemers)) {
+
+                        if (match.datum == formattedTodayDate) {
+                            val matchTimeSlotId = match.tijdslotId.toIntOrNull() ?: -1
+                            if (matchTimeSlotId > currentTimeslotId+1) {
+                                matchesList.add(match)
+                            }
+                        } else {
+                            matchesList.add(match)
+                        }
                     }
                 }
 
@@ -90,13 +109,16 @@ class MatchSearchActivity : AppCompatActivity() {
                             userNamesMap[email] ?: "Onbekende Gebruiker"
                         }
                     }
-                    adapter = MatchAdapter(matchesList)
+                    adapter = MatchAdapter(matchesList, clubName, clubAddress, clubId)
                     recyclerView.adapter = adapter
                 }
             }
             .addOnFailureListener { exception ->
             }
     }
+
+
+
 
 
 }

@@ -1,18 +1,20 @@
 package com.example.mobiledevelopmentproject
 
-import android.util.Log
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.tasks.Tasks
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class MatchAdapter(private val matches: List<Match>) : RecyclerView.Adapter<MatchAdapter.MatchViewHolder>() {
+class MatchAdapter(
+    private val matches: List<Match>,
+    private val clubName: String,
+    private val clubAddress: String,
+    private val clubId: String
+) : RecyclerView.Adapter<MatchAdapter.MatchViewHolder>() {
 
     class MatchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvMatchDate: TextView = view.findViewById(R.id.tvMatchDate)
@@ -28,40 +30,29 @@ class MatchAdapter(private val matches: List<Match>) : RecyclerView.Adapter<Matc
     override fun onBindViewHolder(holder: MatchViewHolder, position: Int) {
         val match = matches[position]
         holder.tvMatchDate.text = "Datum: ${formatDateToEuropean(match.datum)}"
-        val deelnemersString = match.deelnemers.joinToString(", ")
-        holder.tvMatchParticipants.text = "Deelnemers: $deelnemersString"
-        val readableTimeSlot = TimeSlotUtil.getTimeSlotFromId(match.tijdslotId.toIntOrNull() ?: -1)
-        holder.tvMatchTimeSlot.text = "Tijdslot: $readableTimeSlot"
+        holder.tvMatchParticipants.text = "Deelnemers: ${match.deelnemers.joinToString(", ")}"
+        holder.tvMatchTimeSlot.text = "Tijdslot: ${TimeSlotUtil.getTimeSlotFromId(match.tijdslotId.toInt())}"
+
+        holder.itemView.setOnClickListener {
+            val context = holder.itemView.context
+            val intent = Intent(context, MatchDetailsActivity::class.java).apply {
+                putExtra("MATCH", match)
+                putExtra("CLUB_NAME", clubName)
+                putExtra("CLUB_ADDRESS", clubAddress)
+                putExtra("CLUB_ID", clubId)
+            }
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount() = matches.size
 
     private fun formatDateToEuropean(dateString: String?): String {
-        return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
-            val date = inputFormat.parse(dateString)
-            outputFormat.format(date)
-        } catch (e: Exception) {
-            Log.e("MatchSearchActivity", "Error formatting date", e)
-            dateString ?: ""
-        }
-    }
-    fun fetchUserNames(emails: List<String>, onComplete: (Map<String, String>) -> Unit) {
-        val db = FirebaseFirestore.getInstance()
-        val userNamesMap = mutableMapOf<String, String>()
-
-        val tasks = emails.map { email ->
-            db.collection("Users").whereEqualTo("email", email).get().addOnSuccessListener { documents ->
-                for (document in documents) {
-                    val user = document.toObject(UserClass::class.java)
-                    userNamesMap[email] = "${user.firstname} ${user.lastname}"
-                }
-            }
-        }
-
-        Tasks.whenAllSuccess<DocumentSnapshot>(tasks).addOnSuccessListener {
-            onComplete(userNamesMap)
-        }
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
+        return dateString?.let {
+            val date = inputFormat.parse(it)
+            outputFormat.format(date ?: "")
+        } ?: ""
     }
 }

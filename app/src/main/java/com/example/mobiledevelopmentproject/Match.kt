@@ -3,7 +3,7 @@ package com.example.mobiledevelopmentproject
 import java.io.Serializable
 
 data class Match (
-    val id: String = "",
+    var id: String = "",
     val datum: String = "",
     var deelnemers: List<String> = listOf(),
     val isPubliek: Boolean = false,
