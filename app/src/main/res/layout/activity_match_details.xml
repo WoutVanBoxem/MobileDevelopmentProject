@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvClubName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Club Naam"
+            android:textSize="20sp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvClubAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Club Adres"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Veld Naam"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvTimeSlot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tijdslot"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvParticipants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deelnemers"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"/>
+
+
+        <Button
+            android:id="@+id/btnSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Schrijf je in"
+            android:layout_marginTop="24dp"/>
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Annuleer"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+</ScrollView>

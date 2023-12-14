@@ -4,10 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobiledevelopmentproject.R
-import com.example.mobiledevelopmentproject.ClubAdapter
 import com.google.firebase.firestore.FirebaseFirestore
-
 
 class ClubsActivity : AppCompatActivity() {
 
@@ -19,12 +16,15 @@ class ClubsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.select_club)
 
+        val action = intent.getStringExtra("action") ?: "reserveField" // Standaardwaarde
+
         recyclerView = findViewById(R.id.rvClubs)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        fetchClubs()
+        fetchClubs(action)
     }
-    private fun fetchClubs() {
+
+    private fun fetchClubs(action: String) {
         db.collection("clubs")
             .get()
             .addOnSuccessListener { documents ->
@@ -33,12 +33,10 @@ class ClubsActivity : AppCompatActivity() {
                     val club = document.toObject(Club::class.java).copy(id = document.id)
                     clubsList.add(club)
                 }
-                adapter = ClubAdapter(clubsList)
+                adapter = ClubAdapter(clubsList, action)
                 recyclerView.adapter = adapter
             }
             .addOnFailureListener { exception ->
-
             }
     }
-
 }
