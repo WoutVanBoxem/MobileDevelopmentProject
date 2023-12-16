@@ -58,7 +58,7 @@
         android:id="@+id/publicMatchSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Publieke wedstrijd"/>
+        android:text="Publieke wedstrijd" />
 
     <Button
         android:id="@+id/confirmButton"

@@ -6,7 +6,9 @@ data class Match (
     var id: String = "",
     val datum: String = "",
     var deelnemers: List<String> = listOf(),
-    val isPubliek: Boolean = false,
+    val isPubliek: Boolean = true,
     val tijdslotId: String = "",
-    val veldNaam: String = ""
+    val veldNaam: String = "",
+    var clubNaam: String = "",
+    var clubAdres: String = ""
 ) : Serializable

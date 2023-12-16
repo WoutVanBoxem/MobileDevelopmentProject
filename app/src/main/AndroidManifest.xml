@@ -48,6 +48,7 @@
         <activity android:name=".ReservationDetailsActivity" />
         <activity android:name=".MatchSearchActivity" />
         <activity android:name=".MatchDetailsActivity" />
+        <activity android:name=".HistoryActivity" />
     </application>
 
 </manifest>
