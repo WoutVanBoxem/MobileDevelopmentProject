@@ -4,32 +4,70 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btnReserveCourt"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Reserveer een veldje"
-            android:layout_marginTop="300dp"
-            android:background="@color/design_default_color_primary"/>
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <Button
-            android:id="@+id/btnFindMatch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Zoek een wedstrijd"
-            android:layout_below="@id/btnReserveCourt"
-            android:layout_marginTop="16dp"
-            android:background="@color/design_default_color_primary"/>
+            <Button
+                android:id="@+id/btnReserveCourt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@color/design_default_color_primary"
+                android:text="Reserveer een veldje" />
+
+            <Button
+                android:id="@+id/btnFindMatch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Zoek een wedstrijd"
+                android:layout_marginBottom="16dp"
+                android:background="@color/design_default_color_primary"/>
+            <Button
+                android:id="@+id/btnViewHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bekijk Geschiedenis"
+                android:layout_marginBottom="24dp"
+                android:background="@color/design_default_color_primary"
+                android:layout_below="@id/rvYourMatches"/>
+
+            <TextView
+                android:id="@+id/tvYourReservations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jouw Reservaties"
+                android:textSize="18sp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvYourReservations"
+                android:layout_width="match_parent"
+                android:layout_height="225dp"
+                android:layout_marginBottom="24dp"/>
+
+            <TextView
+                android:id="@+id/tvYourMatches"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jouw Wedstrijden"
+                android:textSize="18sp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvYourMatches"
+                android:layout_width="match_parent"
+                android:layout_height="225dp"/>
 
 
-        <!-- Overige UI-elementen kunnen hier worden toegevoegd -->
 
-    </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"

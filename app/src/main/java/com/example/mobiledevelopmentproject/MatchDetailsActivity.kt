@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FieldValue
+
 
 class MatchDetailsActivity : AppCompatActivity() {
     private lateinit var clubId: String
@@ -46,23 +48,20 @@ class MatchDetailsActivity : AppCompatActivity() {
 
     private fun signUpForMatch(match: Match) {
         val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email ?: return
-        val updatedParticipants = ArrayList(match.deelnemers).apply {
-            add(currentUserEmail)
-        }
-
-        Log.d("MatchDetailsActivity", "Huidige gebruiker: $currentUserEmail, Deelnemerslijst na update: $updatedParticipants")
 
         val db = FirebaseFirestore.getInstance()
         db.collection("clubs").document(clubId).collection("reservaties").document(matchId)
-            .update("deelnemers", updatedParticipants)
+            .update("deelnemers", FieldValue.arrayUnion(currentUserEmail))
             .addOnSuccessListener {
-                Log.d("MatchDetailsActivity", "Succesvol ingeschreven voor de wedstrijd.")
+                Log.d("MatchDetailsActivity", "Succesvol ingeschreven voor de wedstrijd met e-mail: $currentUserEmail")
                 navigateToHome()
             }
             .addOnFailureListener { e ->
                 Log.e("MatchDetailsActivity", "Fout bij inschrijving voor wedstrijd: ${e.message}")
             }
     }
+
+
 
     private fun navigateToHome() {
         val intent = Intent(this, HomeActivity::class.java)
