@@ -1,39 +1,42 @@
 package com.example.mobiledevelopmentproject
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
-import android.widget.TextView
-import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.auth.FirebaseUser
 import android.util.Log
-import android.widget.Button
-import android.widget.Spinner
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 
 class Profile : AppCompatActivity() {
 
-
-
     private lateinit var auth: FirebaseAuth
+    private lateinit var imageView: ImageView
+    private var userEmail: String = ""
 
     companion object {
         private const val TAG = "ProfileActivity"
+        private const val PICK_IMAGE_REQUEST = 1
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-
         val enableEditTextButton = findViewById<Button>(R.id.enableEditTextButton)
         val saveEditTextButton = findViewById<Button>(R.id.saveEditTextButton)
+        val uploadButton = findViewById<Button>(R.id.uploadButton)
+        imageView = findViewById<ImageView>(R.id.imageView)
+
         auth = FirebaseAuth.getInstance()
         val db = FirebaseFirestore.getInstance()
         val currentUser: FirebaseUser? = auth.currentUser
-
-
 
         if (currentUser?.email != null) {
             db.collection("users")
@@ -42,6 +45,7 @@ class Profile : AppCompatActivity() {
                 .get()
                 .addOnSuccessListener { documents ->
                     if (!documents.isEmpty) {
+
                         // Access the document data here
                         val user = documents.documents[0].toObject(UserClass::class.java)
                         Log.d(TAG, "User object: $user")
@@ -52,6 +56,7 @@ class Profile : AppCompatActivity() {
                         findViewById<TextView>(R.id.lastNameTextView).text = user?.lastname
                         findViewById<TextView>(R.id.cityTextView).text = user?.city
 
+                        loadProfilePicture(user?.email.toString())
                         val genderSpinner = findViewById<Spinner>(R.id.spinner_gender)
                         val genderArray = resources.getStringArray(R.array.gender_options)
                         val selectedGenderIndex = genderArray.indexOf(user?.gender)
@@ -91,12 +96,20 @@ class Profile : AppCompatActivity() {
                             // Handle the case where the user's gender is not found in the array
                             Log.e(TAG, "User best hand not found in best hand options array")
                         }
-                        // Do something with the user object
+
+                        uploadButton.setOnClickListener {
+                            // Obtain the imageUri using Intent.ACTION_PICK or any other method
+                            val intent = Intent(Intent.ACTION_PICK)
+                            intent.type = "image/*"
+                            startActivityForResult(intent, PICK_IMAGE_REQUEST)
+                        }
+
                     } else {
                     }
                 }
                 .addOnFailureListener { exception ->
-
+                    // Handle exceptions during data retrieval
+                    Log.e(TAG, "Error getting documents: ", exception)
                 }
         }
 
@@ -111,61 +124,59 @@ class Profile : AppCompatActivity() {
         val editBestTime = findViewById<Spinner>(R.id.spinner_bestTime)
         enableEditTextButton.setOnClickListener {
             // Enable the EditText elements
-
             editAddress.isEnabled = true
             editFirstName.isEnabled = true
             editLastName.isEnabled = true
             editCityName.isEnabled = true
             editGender.isEnabled = true
         }
-        saveEditTextButton.setOnClickListener{
 
+        saveEditTextButton.setOnClickListener {
             val collectionRef = db.collection("users")
+            val userEmail = editEmail.text.toString()
 
-            saveEditTextButton.setOnClickListener {
-                val userEmail = editEmail.text.toString() // Replace with the user's email
-                val updates = mapOf(
-                    "address" to editAddress.text.toString(),
-                    "firstname" to editFirstName.text.toString(),
-                    "city" to editCityName.text.toString(),
-                    "lastname" to editLastName.text.toString(),
-                    "gender" to editGender.selectedItem.toString(),
-                    "bestHand" to editBestHand.selectedItem.toString(),
-                    "bestPosition" to editBestCourtPosition.selectedItem.toString(),
-                    "bestTime" to editBestTime.selectedItem.toString()
+            val updates = mapOf(
+                "address" to editAddress.text.toString(),
+                "firstname" to editFirstName.text.toString(),
+                "city" to editCityName.text.toString(),
+                "lastname" to editLastName.text.toString(),
+                "gender" to editGender.selectedItem.toString(),
+                "bestHand" to editBestHand.selectedItem.toString(),
+                "bestPosition" to editBestCourtPosition.selectedItem.toString(),
+                "bestTime" to editBestTime.selectedItem.toString()
+                // Add other fields as needed
+            )
 
-                    // Add other fields as needed
-                )
+            collectionRef.whereEqualTo("email", userEmail).limit(1)
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (!documents.isEmpty) {
+                        val documentId = documents.documents[0].id
 
-                collectionRef.whereEqualTo("email", userEmail).limit(1)
-                    .get()
-                    .addOnSuccessListener { documents ->
-                        if (!documents.isEmpty) {
-                            val documentId = documents.documents[0].id
-
-                            // Update the document with the new values
-                            collectionRef.document(documentId).update(updates)
-                                .addOnSuccessListener {
-                                    // Document successfully updated
-                                    Log.d(TAG, "DocumentSnapshot successfully updated!")
-                                    finish();
-                                    startActivity(getIntent());
-                                }
-                                .addOnFailureListener { e ->
-                                    // Handle errors
-                                    Log.w(TAG, "Error updating document", e)
-                                }
-                        } else {
-                            // Document with the specified email not found
-                        }
+                        // Update the document with the new values
+                        collectionRef.document(documentId).update(updates)
+                            .addOnSuccessListener {
+                                // Document successfully updated
+                                Log.d(TAG, "DocumentSnapshot successfully updated!")
+                                finish()
+                                startActivity(intent)
+                            }
+                            .addOnFailureListener { e ->
+                                // Handle errors
+                                Log.w(TAG, "Error updating document", e)
+                            }
+                    } else {
+                        // Document with the specified email not found
+                        Log.e(TAG, "Document with email $userEmail not found")
                     }
-                    .addOnFailureListener { exception ->
-                        // Handle errors
-                        Log.w(TAG, "Error getting documents: ", exception)
-                    }
-            }
+                }
+                .addOnFailureListener { exception ->
+                    // Handle errors
+                    Log.w(TAG, "Error getting documents: ", exception)
+                }
         }
 
+        /*
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -176,8 +187,72 @@ class Profile : AppCompatActivity() {
                 }
                 else -> return@setOnNavigationItemSelectedListener false
             }
-        }
-
-
+        }*/
     }
+
+    // Override onActivityResult to handle the result of image selection
+    private fun loadProfilePicture(email: String?) {
+        if (email != null) {
+            // Initialize storage reference
+            val storageReference: StorageReference = FirebaseStorage.getInstance().reference
+
+            val imageRef = storageReference.child("profilepictures/$email/profile_picture.jpg")
+
+            imageRef.downloadUrl.addOnSuccessListener { uri ->
+                val downloadUrl = uri.toString()
+
+                // Load the image into the imageView using Glide
+                Glide.with(this)
+                    .load(downloadUrl)
+                    .override(400, 400)
+                    .fitCenter()
+                    .into(imageView)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            val imageUri: Uri = data.data!!
+
+            uploadImage(imageUri,userEmail)
+        }
+    }
+
+    private fun uploadImage(imageUri: Uri, email: String) {
+        val storageReference: StorageReference = FirebaseStorage.getInstance().reference
+
+        val filename = "profile_picture.jpg"
+
+        val existingImageRef = storageReference.child("profilepictures/$email/$filename")
+
+        // Delete the existing image
+        existingImageRef.delete()
+            .addOnSuccessListener {
+
+                val newImageRef = storageReference.child("profilepictures/$email/$filename")
+
+                newImageRef.putFile(imageUri)
+                    .addOnSuccessListener { taskSnapshot ->
+                        Toast.makeText(this, "Image uploaded successfully", Toast.LENGTH_SHORT).show()
+
+                        newImageRef.downloadUrl.addOnSuccessListener { uri ->
+                            val downloadUrl = uri.toString()
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        // Image upload failed
+                        Toast.makeText(this, "Image upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener { e ->
+                // Existing image deletion failed
+                Toast.makeText(this, "Existing image deletion failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+
 }

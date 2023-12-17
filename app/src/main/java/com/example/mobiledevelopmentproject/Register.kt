@@ -1,6 +1,7 @@
 package com.example.mobiledevelopmentproject
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -9,6 +10,8 @@ import android.widget.Toast
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class Register : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -107,6 +110,7 @@ class Register : AppCompatActivity() {
             .set(userMap)
             .addOnSuccessListener {
                 // Success
+                uploadDefaultImage(email);
                 Toast.makeText(this, "User information saved successfully", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->
@@ -114,4 +118,34 @@ class Register : AppCompatActivity() {
                 Toast.makeText(this, "Error saving user information: $e", Toast.LENGTH_SHORT).show()
             }
     }
+    // Inside the uploadImage function in the Register activity
+    private fun uploadDefaultImage(email: String) {
+        val storageReference: StorageReference = FirebaseStorage.getInstance().reference
+        val filename = "profile_picture.jpg"
+        val imageRef = storageReference.child("profilepictures/$email/$filename")
+
+        val defaultPictureRef = storageReference.child("profilepictures/DefaultProfilePicture.jpg")
+
+        defaultPictureRef.getBytes(Long.MAX_VALUE)
+            .addOnSuccessListener { bytes ->
+                imageRef.putBytes(bytes)
+                    .addOnSuccessListener { taskSnapshot ->
+                        Toast.makeText(this, "Default image uploaded successfully", Toast.LENGTH_SHORT).show()
+
+                        imageRef.downloadUrl.addOnSuccessListener { uri ->
+                            val downloadUrl = uri.toString()
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, "Default image upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to download default profile picture: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+
+
 }

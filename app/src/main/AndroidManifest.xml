@@ -49,6 +49,8 @@
         <activity android:name=".MatchSearchActivity" />
         <activity android:name=".MatchDetailsActivity" />
         <activity android:name=".HistoryActivity" />
+
     </application>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

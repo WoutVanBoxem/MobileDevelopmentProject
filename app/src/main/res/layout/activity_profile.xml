@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp">
-
             <TextView
                 android:id="@+id/labelEmail"
                 android:layout_width="wrap_content"
@@ -221,6 +220,27 @@
                 android:layout_toEndOf="@+id/saveEditTextButton"
                 android:text="Edit" />
 
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:scaleType="fitCenter"
+                android:layout_gravity="top|end"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <Button
+                android:id="@+id/uploadButton"
+                android:layout_width="111dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="19dp"
+                android:text="Upload Image" />
+
+
             <!-- <RelativeLayout
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
@@ -238,9 +258,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="?android:attr/windowBackground"
-        app:menu="@menu/navigation_menu"/>
+        app:menu="@menu/navigation_menu"
+        android:layout_above="@id/saveEditTextButton"/>
     <!-- android:layout_below="@id/saveEditTextButton"-->
-</RelativeLayout>
+
 
 
 
