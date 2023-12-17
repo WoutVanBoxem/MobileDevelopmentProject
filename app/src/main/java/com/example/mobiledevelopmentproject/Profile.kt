@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -56,7 +57,9 @@ class Profile : AppCompatActivity() {
                         findViewById<TextView>(R.id.lastNameTextView).text = user?.lastname
                         findViewById<TextView>(R.id.cityTextView).text = user?.city
 
+                        userEmail = user?.email.toString();
                         loadProfilePicture(user?.email.toString())
+
                         val genderSpinner = findViewById<Spinner>(R.id.spinner_gender)
                         val genderArray = resources.getStringArray(R.array.gender_options)
                         val selectedGenderIndex = genderArray.indexOf(user?.gender)
@@ -176,7 +179,7 @@ class Profile : AppCompatActivity() {
                 }
         }
 
-        /*
+
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -187,7 +190,7 @@ class Profile : AppCompatActivity() {
                 }
                 else -> return@setOnNavigationItemSelectedListener false
             }
-        }*/
+        }
     }
 
     // Override onActivityResult to handle the result of image selection
@@ -228,18 +231,55 @@ class Profile : AppCompatActivity() {
 
         val existingImageRef = storageReference.child("profilepictures/$email/$filename")
 
-        // Delete the existing image
-        existingImageRef.delete()
-            .addOnSuccessListener {
+        // Logging for debugging
+        Log.d("UploadImage", "Email: $email")
 
+        // Check if the file exists before attempting to delete
+        existingImageRef.metadata
+            .addOnSuccessListener { metadata ->
+                // File exists, proceed with deletion
+                existingImageRef.delete()
+                    .addOnSuccessListener {
+                        // Deletion successful, proceed with upload
+                        val newImageRef = storageReference.child("profilepictures/$email/$filename")
+
+                        newImageRef.putFile(imageUri)
+                            .addOnSuccessListener { taskSnapshot ->
+                                // Image uploaded successfully
+                                Toast.makeText(this, "Image uploaded successfully", Toast.LENGTH_SHORT).show()
+
+                                // You can also get the download URL here
+                                newImageRef.downloadUrl.addOnSuccessListener { uri ->
+                                    val downloadUrl = uri.toString()
+                                    // Now you can use the download URL as needed
+                                }
+                            }
+                            .addOnFailureListener { e ->
+                                // Image upload failed
+                                Toast.makeText(this, "Image upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                    .addOnFailureListener { e ->
+                        // Existing image deletion failed
+                        Toast.makeText(this, "Existing image deletion failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener { e ->
+                // File does not exist, proceed with upload
                 val newImageRef = storageReference.child("profilepictures/$email/$filename")
+
+                // Logging for debugging
+                Log.d("UploadImage", "New Image Path: ${newImageRef.path}")
 
                 newImageRef.putFile(imageUri)
                     .addOnSuccessListener { taskSnapshot ->
+                        // Image uploaded successfully
                         Toast.makeText(this, "Image uploaded successfully", Toast.LENGTH_SHORT).show()
 
+                        // You can also get the download URL here
                         newImageRef.downloadUrl.addOnSuccessListener { uri ->
                             val downloadUrl = uri.toString()
+                            // Now you can use the download URL as needed
                         }
                     }
                     .addOnFailureListener { e ->
@@ -247,11 +287,11 @@ class Profile : AppCompatActivity() {
                         Toast.makeText(this, "Image upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
             }
-            .addOnFailureListener { e ->
-                // Existing image deletion failed
-                Toast.makeText(this, "Existing image deletion failed: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
     }
+
+
+
+
 
 
 
