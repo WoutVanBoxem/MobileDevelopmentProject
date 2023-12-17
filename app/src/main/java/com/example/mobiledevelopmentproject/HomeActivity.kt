@@ -24,6 +24,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_screen)
 
+
         val reserveerVeldjeButton: Button = findViewById(R.id.btnReserveCourt)
         reserveerVeldjeButton.setOnClickListener {
             val intent = Intent(this, ClubsActivity::class.java)
@@ -57,6 +58,7 @@ class HomeActivity : AppCompatActivity() {
         fetchMatchesAndReservations()
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.navigation)
+        bottomNavigationView.selectedItemId = R.id.navigation_home
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_profile -> {

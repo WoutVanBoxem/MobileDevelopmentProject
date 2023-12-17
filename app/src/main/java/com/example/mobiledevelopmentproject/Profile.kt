@@ -181,6 +181,7 @@ class Profile : AppCompatActivity() {
 
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.navigation)
+        bottomNavigationView.selectedItemId = R.id.navigation_profile
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {

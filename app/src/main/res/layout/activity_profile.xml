@@ -9,12 +9,15 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?actionBarSize"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:layout_marginBottom="?actionBarSize"
+        android:padding="16dp">
             <TextView
                 android:id="@+id/labelEmail"
                 android:layout_width="wrap_content"
@@ -258,8 +261,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="?android:attr/windowBackground"
-        app:menu="@menu/navigation_menu"
-        android:layout_above="@id/saveEditTextButton"/>
+        app:menu="@menu/navigation_menu"/>
+
     <!-- android:layout_below="@id/saveEditTextButton"-->
 
 
